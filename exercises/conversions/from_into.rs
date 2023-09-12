@@ -24,6 +24,42 @@ impl Default for Person {
     }
 }
 
+impl From<&str> for Person {
+    fn from(s: &str) -> Person {
+        // Step 1: If the length of the provided string is 0, then return the default of Person.
+        if s.is_empty() {
+            return Person::default();
+        }
+
+        // Step 2: Split the given string on the commas present in it.
+        let parts: Vec<&str> = s.split(',').collect();
+
+        if parts.len() > 2 {
+            return Person::default();
+        }
+
+        // Step 3: Extract the first element from the split operation and use it as the name.
+        let name = parts.get(0).unwrap_or(&"").trim();
+
+        // Step 4: If the name is empty, then return the default of Person.
+        if name.is_empty() {
+            return Person::default();
+        }
+
+        // Step 5: Extract the other element from the split operation and parse it into a `usize` as the age.
+        let age_str = parts.get(1).unwrap_or(&"");
+        let age = age_str.parse::<usize>();
+
+        // Step 6: If while parsing the age, something goes wrong, then return the default of Person.
+        // Otherwise, return an instantiated Person object with the results.
+        match age {
+            Ok(0) => Person::default(),
+            Ok(age_val) => Person { name: name.to_string(), age: age_val },
+            Err(_) => Person::default()
+        }
+    }
+}
+
 // Your task is to complete this implementation in order for the line `let p =
 // Person::from("Mark,20")` to compile Please note that you'll need to parse the
 // age component into a `usize` with something like `"4".parse::<usize>()`. The
@@ -39,13 +75,6 @@ impl Default for Person {
 //    `usize` as the age.
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
-
-// I AM NOT DONE
-
-impl From<&str> for Person {
-    fn from(s: &str) -> Person {
-    }
-}
 
 fn main() {
     // Use the `from` function
